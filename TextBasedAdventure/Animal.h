@@ -3,5 +3,8 @@
 
 class Animal : public Creature
 {
+private:
+public:
+	Animal();
 };
 

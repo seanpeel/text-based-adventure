@@ -1,5 +1,16 @@
 #include "Creature.h"
 
+Creature::Creature()
+{
+
+}
+
+Creature::Creature(int type, int room)
+{
+	this->type = type;
+	this->room = room;
+}
+
 void Creature::SetType(int type)
 {
 	this->type = type;

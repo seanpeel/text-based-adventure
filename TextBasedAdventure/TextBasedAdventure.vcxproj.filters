@@ -33,10 +33,10 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NPC.cpp">
+    <ClCompile Include="Animal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Animal.cpp">
+    <ClCompile Include="Npc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,10 +56,10 @@
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NPC.h">
+    <ClInclude Include="Animal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Animal.h">
+    <ClInclude Include="Npc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

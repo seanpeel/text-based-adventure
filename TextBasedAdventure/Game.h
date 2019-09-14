@@ -1,4 +1,6 @@
+#include "Animal.h"
 #include "Creature.h"
+#include "NPC.h"
 #include "Player.h"
 #include "Room.h"
 

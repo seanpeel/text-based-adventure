@@ -2,9 +2,12 @@
 class Creature
 {
 private:
-	int type;
-	int room;
+	int type = -1;
+	int room = -1;
 public:
+	Creature(int type, int room);
+	Creature();
+
 	void SetType(int type);
 	int GetRoom();
 	void SetRoom(int room);

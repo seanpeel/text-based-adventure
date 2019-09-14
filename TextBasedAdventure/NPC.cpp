@@ -1,1 +1,6 @@
-#include "NPC.h"
+#include "Npc.h"
+
+Npc::Npc()
+{
+
+}

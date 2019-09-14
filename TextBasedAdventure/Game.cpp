@@ -31,13 +31,9 @@ void Game::SetUp()
 			cin >> neighbors[i];
 		}
 
-		Room* room = new Room();
-		room->SetState(state);
-		room->SetNeighbors(neighbors);
-		rooms[i] = room;
-
+		rooms[i] = new Room(state, neighbors);
 	}
-	//
+	//Done Setting up Rooms
 
 	//Set Up Creatures
 	cin >> totalCreatures;
@@ -47,27 +43,36 @@ void Game::SetUp()
 		cin >> type;
 		cin >> location;
 
-		switch(type)
+		switch (type)
 		{
 		case 0: // Player
-			player = new Player;
-			player->SetRoom(location);
+			player = new Player();
 			player->SetType(type);
+			player->SetRoom(location);
+
+			creatures[i] = player;
 			break;
 		case 1: // Animal
-			break;
-		case 2: // NPC
-			break;
+			{
+				Animal* animal = new Animal();
+				animal->SetType(type);
+				animal->SetRoom(location);
+
+				creatures[i] = animal;
+				break;
+			}
+		case 2: // NPC 
+			{
+				Npc* npc = new Npc();
+				npc->SetType(type);
+				npc->SetRoom(location);
+
+				creatures[i] = npc;
+				break;
+			}
 		}
-
-		Creature* creature = new Creature();
-		creature->SetRoom(location);
-		creature->SetType(type);
-
-		creatures[i] = creature;
 	}
-	//
-	
+	// Done Setting up Creatures
 }
 
 int Game::Play()
@@ -150,7 +155,7 @@ int Game::Play()
 			}
 		}
 
-		else if (util->hasEnding(command, "clean")) //use ends with - break into player action, creature action
+		else if (util->hasEnding(command, "clean")) //use hasEnding - break into player action, creature action
 		{
 			if (command == "clean")
 			{
@@ -163,7 +168,7 @@ int Game::Play()
 
 		}
 
-		else if (util->hasEnding(command, "dirty")) //use ends with - break into player action, creature action
+		else if (util->hasEnding(command, "dirty")) //use hasEnding - break into player action, creature action
 		{
 			if (command == "dirty")
 			{
@@ -187,7 +192,7 @@ int Game::Play()
 
 		else if (command == "help")
 		{
-			printf("%s\n", "Help not yet implemented.");
+			printf("%s\n", "Available commands are: north, west, south, east, look, clean, dirty, {creature}:clean, {creature}:dirty");
 		}
 
 		else if (command == "quit")
