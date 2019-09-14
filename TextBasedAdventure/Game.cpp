@@ -36,6 +36,7 @@ void Game::SetUp()
 	//Done Setting up Rooms
 
 	//Set Up Creatures
+	player = new Player();
 	cin >> totalCreatures;
 
 	for (int i = 0; i < totalCreatures; i++)
@@ -46,7 +47,6 @@ void Game::SetUp()
 		switch (type)
 		{
 		case 0: // Player
-			player = new Player();
 			player->SetType(type);
 			player->SetRoom(location);
 
@@ -57,7 +57,7 @@ void Game::SetUp()
 				Animal* animal = new Animal();
 				animal->SetType(type);
 				animal->SetRoom(location);
-
+				
 				creatures[i] = animal;
 				break;
 			}
@@ -71,6 +71,7 @@ void Game::SetUp()
 				break;
 			}
 		}
+		rooms[location]->AddCreature(i);
 	}
 	// Done Setting up Creatures
 }
@@ -160,12 +161,14 @@ int Game::Play()
 			if (command == "clean")
 			{
 				printf("%s\n", "Player Clean.");
+				int* respect = player->GetRespect();
+				static_cast<Animal*>(creatures[0])->lickFace(*respect);
+				printf("%d\n", *respect);
 			}
 			else
 			{
 				printf("%s\n", "Creature Clean.");
 			}
-
 		}
 
 		else if (util->hasEnding(command, "dirty")) //use hasEnding - break into player action, creature action
@@ -173,12 +176,15 @@ int Game::Play()
 			if (command == "dirty")
 			{
 				printf("%s\n", "Player Dirty.");
+				int* respect = player->GetRespect();
+				static_cast<Animal*>(creatures[0])->growl(*respect);
+				printf("%d\n", *respect);
 			}
 			else
 			{
 				printf("%s\n", "Creature Dirty.");
-			}
 
+			}
 		}
 
 		else if (command == "look")
@@ -186,8 +192,72 @@ int Game::Play()
 			int curRoomIndex = player->GetRoom();
 			Room* curRoom = rooms[curRoomIndex];
 			int* neighbors = curRoom->GetNeighbors();
-			printf("Room: %d\nState: %d\n", curRoomIndex, rooms[curRoomIndex]->GetState());
-			printf("%s %d %d %d %d\n", "Neighbors: ", neighbors[0], neighbors[1], neighbors[2], neighbors[3]);
+
+			printf("Room %d , ", curRoomIndex);
+			
+			string roomState = "";
+			switch (rooms[curRoomIndex]->GetState())
+			{
+			case 0:
+				roomState = "dirty";
+				break;
+			case 1:
+				roomState = "half-dirty";
+				break;
+			case 2:
+				roomState = "clean";
+				break;
+			}
+			cout << roomState << ", Neighbors";
+
+			for(int i = 0; i < 4; i++) 
+			{
+				if (neighbors[i] != -1)
+				{
+					switch (i)
+					{
+					case 0:
+						printf(" %d %s,", neighbors[i], "to the north");
+						break;
+					case 1:
+						printf(" %d %s,", neighbors[i], "to the south");
+						break;
+					case 2:
+						printf(" %d %s,", neighbors[i], "to the east");
+						break;
+					case 3:
+						printf(" %d %s,", neighbors[i], "to the west");
+						break;
+					}
+				}
+			}
+
+			printf("%s\n", " contains:");
+
+			int totalCreaturesInRoom = curRoom->GetTotalCreatures();
+
+			if (totalCreaturesInRoom > 0)
+			{
+				int* creaturesInRoom = curRoom->GetCreatures();
+
+				for (int i = 0; i < totalCreaturesInRoom; i++)
+				{
+					Creature* curCreature = creatures[creaturesInRoom[i]];
+					int curCreatureType = curCreature->GetType();
+					switch (curCreatureType)
+					{
+					case 0: // Player
+						printf("%s\n", "PC");
+						break;
+					case 1: // Animal
+						printf("%s %d\n", "Animal", creaturesInRoom[i]);
+						break;
+					case 2: // NPC
+						printf("%s %d\n", "NPC", creaturesInRoom[i]);
+						break;
+					}
+				}
+			}
 		}
 
 		else if (command == "help")
@@ -195,7 +265,7 @@ int Game::Play()
 			printf("%s\n", "Available commands are: north, west, south, east, look, clean, dirty, {creature}:clean, {creature}:dirty");
 		}
 
-		else if (command == "quit")
+		else if (command == "exit")
 		{
 			printf("%s\n", "Goodbye!");
 		}
@@ -209,7 +279,7 @@ int Game::Play()
 		//player->GetRespect() <= 0  //You Lose!
 
 
-	} while (command != "quit"); //exit game loop.
+	} while (command != "exit"); //exit game loop.
  
 
 	return 0;

@@ -11,6 +11,11 @@ Creature::Creature(int type, int room)
 	this->room = room;
 }
 
+int Creature::GetType()
+{
+	return this->type;
+}
+
 void Creature::SetType(int type)
 {
 	this->type = type;

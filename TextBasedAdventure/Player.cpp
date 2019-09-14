@@ -4,3 +4,8 @@ Player::Player()
 {
 
 }
+
+int* Player::GetRespect() 
+{
+	return &this->respect;
+}

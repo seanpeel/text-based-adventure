@@ -7,5 +7,6 @@ private:
 	int respect = 40;
 public:
 	Player();
+	int* GetRespect();
 };
 

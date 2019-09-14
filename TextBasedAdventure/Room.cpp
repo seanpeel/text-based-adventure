@@ -30,10 +30,33 @@ int* Room::GetNeighbors()
 	return neighbors;
 }
 
-/*void Room::SetNeighbors(int neighbors[4])
+int Room::GetTotalCreatures()
 {
-	for (int i = 0; i < 4; i++)
+	return totalCreatures;
+}
+
+int* Room::GetCreatures() 
+{
+	return creatures;
+}
+
+void Room::AddCreature(int creature) 
+{
+	creatures[totalCreatures++] = creature;
+}
+
+void Room::RemoveCreature(int creature)
+{
+	for (int i = 0; i < totalCreatures; i++)
 	{
-		this->neighbors[i] = neighbors[i];
+		if (creatures[i] == creature)
+		{
+			for (int j = i; j < totalCreatures; j++)
+			{
+				creatures[j] = creatures[j + 1];
+			}
+			creatures[totalCreatures] = -1;
+			break;
+		}
 	}
-}*/
+}
