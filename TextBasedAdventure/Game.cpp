@@ -1,7 +1,6 @@
 #include "Game.h"
 #include "Util.h"
 
-
 #include <iostream>
 #include <string>
 
@@ -31,13 +30,12 @@ void Game::SetUp()
 		{
 			cin >> neighbors[i];
 		}
+
 		Room* room = new Room();
 		room->SetState(state);
 		room->SetNeighbors(neighbors);
-		
 		rooms[i] = room;
 
-		delete room;
 	}
 	//
 
@@ -49,20 +47,34 @@ void Game::SetUp()
 		cin >> type;
 		cin >> location;
 
+		switch(type)
+		{
+		case 0: // Player
+			player = new Player;
+			player->SetRoom(location);
+			player->SetType(type);
+			break;
+		case 1: // Animal
+			break;
+		case 2: // NPC
+			break;
+		}
+
 		Creature* creature = new Creature();
 		creature->SetRoom(location);
 		creature->SetType(type);
 
 		creatures[i] = creature;
-
-		delete creature;
 	}
+	//
+	
 }
 
 int Game::Play()
 {
 	Util* util = new Util;
 	string command;
+
 	//game loop
 	do
 	{
@@ -71,25 +83,73 @@ int Game::Play()
 
 		if (command == "north") //player movement
 		{
-			printf("%s\n", "Player Movement North.");
-			int curRoomIndex = player->GetRoom;
+			int curRoomIndex = player->GetRoom();
+			printf("%s%d\n", "Player Attempting to Move North. Current Room: ", curRoomIndex);
 			Room* curRoom = rooms[curRoomIndex];
-			int nextRoomIndex = curRoom->GetNeighbors()[0];
-			player->SetRoom(nextRoomIndex);
+			int nextRoomIndex = curRoom->GetNeighbors()[NORTH];
+			if(nextRoomIndex != -1) 
+			{
+				player->SetRoom(nextRoomIndex);
+				printf("%s%d\n", "Player Moved North. Current Room: ", nextRoomIndex);
+			}
+			else
+			{
+				printf("%s\n", "No Room Exists to the North.");
+			}
+			
 		}
 
-		else if (command == "west" ) //use ends with - break into player action, creature action
+		else if (command == "west" ) //player movement
 		{
-
+			int curRoomIndex = player->GetRoom();
+			printf("%s%d\n", "Player Attempting to Move West. Current Room: ", curRoomIndex);
+			Room* curRoom = rooms[curRoomIndex];
+			int nextRoomIndex = curRoom->GetNeighbors()[WEST];
+			if (nextRoomIndex != -1)
+			{
+				player->SetRoom(nextRoomIndex);
+				printf("%s%d\n", "Player Moved West. Current Room: ", nextRoomIndex);
+			}
+			else
+			{
+				printf("%s\n", "No Room Exists to the West.");
+			}
 		}
-		else if (command == "south") //use ends with - break into player action, creature action
+
+		else if (command == "south") //player movement
 		{
-
+			int curRoomIndex = player->GetRoom();
+			printf("%s%d\n", "Player Attempting to Move South. Current Room: ", curRoomIndex);
+			Room* curRoom = rooms[curRoomIndex];
+			int nextRoomIndex = curRoom->GetNeighbors()[SOUTH];
+			if (nextRoomIndex != -1)
+			{
+				player->SetRoom(nextRoomIndex);
+				printf("%s%d\n", "Player Moved South. Current Room: ", nextRoomIndex);
+			}
+			else
+			{
+				printf("%s\n", "No Room Exists to the South.");
+			}
 		}
-		else if (command == "east") //use ends with - break into player action, creature action
+
+		else if (command == "east") //player movement
 		{
-
+			int curRoomIndex = player->GetRoom();
+			printf("%s%d\n", "Player Attempting to Move East. Current Room: ", curRoomIndex);
+			Room* curRoom = rooms[curRoomIndex];
+			int nextRoomIndex = curRoom->GetNeighbors()[EAST];
+			if (nextRoomIndex != -1)
+			{
+				player->SetRoom(nextRoomIndex);
+				printf("%s%d\n", "Player Moved East. Current Room: ", nextRoomIndex);
+			}
+			else
+			{
+				printf("%s\n", "No Room Exists to the East.");
+			}
 		}
+
 		else if (util->hasEnding(command, "clean")) //use ends with - break into player action, creature action
 		{
 			if (command == "clean")
@@ -102,18 +162,47 @@ int Game::Play()
 			}
 
 		}
+
+		else if (util->hasEnding(command, "dirty")) //use ends with - break into player action, creature action
+		{
+			if (command == "dirty")
+			{
+				printf("%s\n", "Player Dirty.");
+			}
+			else
+			{
+				printf("%s\n", "Creature Dirty.");
+			}
+
+		}
+
+		else if (command == "look")
+		{
+			int curRoomIndex = player->GetRoom();
+			Room* curRoom = rooms[curRoomIndex];
+			int* neighbors = curRoom->GetNeighbors();
+			printf("Room: %d\nState: %d\n", curRoomIndex, rooms[curRoomIndex]->GetState());
+			printf("%s %d %d %d %d\n", "Neighbors: ", neighbors[0], neighbors[1], neighbors[2], neighbors[3]);
+		}
+
 		else if (command == "help")
 		{
 			printf("%s\n", "Help not yet implemented.");
 		}
+
 		else if (command == "quit")
 		{
 			printf("%s\n", "Goodbye!");
 		}
+
 		else 
 		{
 			printf("%s\n", "Please enter a valid command. Use help for a list of valid commands.");
 		}
+
+		//player->GetRespect() >= 80 //You Win!
+		//player->GetRespect() <= 0  //You Lose!
+
 
 	} while (command != "quit"); //exit game loop.
  
