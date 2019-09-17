@@ -6,38 +6,66 @@ Npc::Npc()
 
 }
 
-void Npc::grumble(int& respect, int state)
+void Npc::Grumble(int& respect)
 {
-	if (state == 0)
-	{
-		printf("%s\n", "This room is already clean.");
-	}
-	else
-	{
-		respect--;
-	}
+	printf("%d %s.", this->GetName(), "grumbles");
+	respect--;
 }
 
-void Npc::smile(int& respect, int state)
+void Npc::Smile(int& respect)
 {
-	if (state == 2)
-	{
-		printf("%s\n", "This room is already dirty.");
-	}
-	else
-	{
-		respect++;
-	}
+	printf("%d %s.", this->GetName(), "smiles");
+	respect++;
+}
+
+void Npc::StrongGrumble(int& respect)
+{
+	printf("%d %s.", this->GetName(), "grumbles a lot");
+	respect = respect - 3;
+}
+
+void Npc::StrongSmile(int& respect)
+{
+	printf("%d %s.", this->GetName(), "smiles a lot");
+	respect = respect + 3;
 }
 
 void Npc::React(int& respect, int state, int action)
 {
 	if (action == 0) //clean
 	{
-		grumble(respect, state);
+		if(state != 0)
+			Grumble(respect);
+		else
+			printf("%s\n", "This room is already clean.");
 	}
 	else //dirty
 	{
-		smile(respect, state);
+		if (state != 2)
+			Smile(respect);
+		else
+			printf("%s\n", "This room is already dirty.");
 	}
+
+	printf(" %s %d.\n", "Respect is now ", respect);
+}
+
+void Npc::StrongReact(int& respect, int state, int action)
+{
+	if (action == 0) //clean
+	{
+		if (state != 0)
+			StrongGrumble(respect);
+		else
+			printf("%s\n", "This room is already clean.");
+	}
+	else //dirty
+	{
+		if (state != 2)
+			StrongSmile(respect);
+		else
+			printf("%s\n", "This room is already dirty.");
+	}
+
+	printf(" %s %d.\n", "Respect is now ", respect);
 }

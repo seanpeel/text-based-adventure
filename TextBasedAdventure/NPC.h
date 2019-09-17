@@ -4,10 +4,13 @@
 class Npc : public Creature
 {
 private:
-	void grumble(int& respect, int state);
-	void smile(int& respect, int state);
+	void Grumble(int& respect);
+	void Smile(int& respect);
+	void StrongGrumble(int& respect);
+	void StrongSmile(int& respect);
 public:
 	Npc();
 	void React(int& respect, int state, int action);
+	void StrongReact(int& respect, int state, int action);
 };
 

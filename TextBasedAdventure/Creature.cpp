@@ -31,6 +31,16 @@ void Creature::SetRoom(int room)
 	this->room = room;
 }
 
+int Creature::GetName()
+{
+	return this->name;
+}
+
+void Creature::SetName(int name)
+{
+	this->name = name;
+}
+
 int Creature::Move(int creature, int src, int dest, Room** rooms)
 {
 	if (dest != -1)

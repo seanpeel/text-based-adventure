@@ -4,7 +4,7 @@ class Room
 private:
 	int state = -1;
 	int neighbors[4] = { -1,-1,-1,-1 };
-	int creatures[100] = { -1 };
+	int creatures[10] = { -1 };
 	int totalCreatures = 0;
 public:
 	Room();

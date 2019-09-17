@@ -72,6 +72,7 @@ void Game::SetUp()
 				break;
 			}
 		}
+		creatures[i]->SetName(i);
 		rooms[location]->AddCreature(i);
 	}
 	// Done Setting up Creatures
@@ -91,17 +92,17 @@ int Game::Play()
 		if (command == "north") //player movement
 		{
 			int curRoomIndex = player->GetRoom();
-			printf("%s%d\n", "Player Attempting to Move North. Current Room: ", curRoomIndex);
 			Room* curRoom = rooms[curRoomIndex];
 			int nextRoomIndex = curRoom->GetNeighbors()[NORTH];
 			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
+
 			if (success == 0)
 			{
-				printf("%s%d\n", "Player Moved North. Current Room: ", nextRoomIndex);
+				printf("%s\n\n", "You leave towards the north.");
 			}
 			else
 			{
-				printf("%s\n", "No Room Exists to the North.");
+				printf("%s\n\n", "No room exists to the north.");
 			}
 			
 		}
@@ -109,103 +110,121 @@ int Game::Play()
 		else if (command == "west" ) //player movement
 		{
 			int curRoomIndex = player->GetRoom();
-			printf("%s%d\n", "Player Attempting to Move West. Current Room: ", curRoomIndex);
 			Room* curRoom = rooms[curRoomIndex];
 			int nextRoomIndex = curRoom->GetNeighbors()[WEST];
 			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
+
 			if (success == 0)
 			{
-				printf("%s%d\n", "Player Moved West. Current Room: ", nextRoomIndex);
+				printf("%s\n\n", "You leave towards the west.");
 			}
 			else
 			{
-				printf("%s\n", "No Room Exists to the West.");
+				printf("%s\n\n", "No room exists to the west.");
 			}
 		}
 
 		else if (command == "south") //player movement
 		{
 			int curRoomIndex = player->GetRoom();
-			printf("%s%d\n", "Player Attempting to Move South. Current Room: ", curRoomIndex);
 			Room* curRoom = rooms[curRoomIndex];
 			int nextRoomIndex = curRoom->GetNeighbors()[SOUTH];
 			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
 			if (success == 0)
 			{
-				printf("%s%d\n", "Player Moved South. Current Room: ", nextRoomIndex);
+				printf("%s\n\n", "You leave towards the south.");
 			}
 			else
 			{
-				printf("%s\n", "No Room Exists to the South.");
+				printf("%s\n\n", "No room exists to the south.");
 			}
 		}
 
 		else if (command == "east") //player movement
 		{
 			int curRoomIndex = player->GetRoom();
-			printf("%s%d\n", "Player Attempting to Move East. Current Room: ", curRoomIndex);
 			Room* curRoom = rooms[curRoomIndex];
 			int nextRoomIndex = curRoom->GetNeighbors()[EAST];
 			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
 			if (success == 0)
 			{
-				printf("%s%d\n", "Player Moved East. Current Room: ", nextRoomIndex);
+				printf("%s\n\n", "You leave towards the east.");
 			}
 			else
 			{
-				printf("%s\n", "No Room Exists to the East.");
+				printf("%s\n\n", "No room exists to the east.");
 			}
 		}
 
 		else if (util->hasEnding(command, "clean")) //use hasEnding - break into player action, creature action
 		{
-			if (command == "clean")
+			int* respect = player->GetRespect();
+			int curRoomIndex = player->GetRoom();
+			Room* curRoom = rooms[curRoomIndex];
+			int* creaturesIndex = curRoom->GetCreatures();
+			int totalCreatures = curRoom->GetTotalCreatures();
+			int state = curRoom->GetState();
+			
+			curRoom->Clean();
+			
+			for (int i = 0; i < totalCreatures; i++)
 			{
-				printf("%s\n", "Player Clean.");
-				int* respect = player->GetRespect();
-				int curRoomIndex = player->GetRoom();
+				Creature* creature = creatures[creaturesIndex[i]];
+				int type = creature->GetType();
 
-				Room* curRoom = rooms[curRoomIndex];
-				int* creaturesIndex = curRoom->GetCreatures();
-				int totalCreatures = curRoom->GetTotalCreatures();
-				curRoom->Clean();
-
-				for (int i = 0; i < totalCreatures; i++)
+				switch (type)
 				{
-					Creature* creature = creatures[creaturesIndex[i]];
-					int type = creature->GetType();
-					
-					switch (type)
-					{
-					case 1:	
-						//cast to Animal;
-						//static_cast<Animal*>(creature)->React(*respect, curRoom->GetState(), CLEAN);
-						break;
-					case 2:
-						//cast to Npc;
-						static_cast<Npc*>(creature)->React(*respect, curRoom->GetState(), CLEAN);
-						break;
-					}
+				case 1:
+					//cast to Animal;
+					if(command == "clean")
+						static_cast<Animal*>(creature)->React(*respect, state, CLEAN); //player clean reaction
+					else
+						static_cast<Animal*>(creature)->StrongReact(*respect, state, CLEAN); //creature clean reaction
+					break;
+				case 2:
+					//cast to Npc;
+					if (command == "clean")
+						static_cast<Npc*>(creature)->React(*respect, state, CLEAN); //player clean reaction
+					else
+						static_cast<Npc*>(creature)->StrongReact(*respect, state, CLEAN); //creature clean reaction
+					break;
 				}
-
-				printf("%d\n", *respect);
-			}
-			else
-			{
-				printf("%s\n", "Creature Clean.");
 			}
 		}
 
 		else if (util->hasEnding(command, "dirty")) //use hasEnding - break into player action, creature action
 		{
-			if (command == "dirty")
-			{
-				printf("%s\n", "Player Dirty.");
-			}
-			else
-			{
-				printf("%s\n", "Creature Dirty.");
+			int* respect = player->GetRespect();
+			int curRoomIndex = player->GetRoom();
+			Room* curRoom = rooms[curRoomIndex];
+			int* creaturesIndex = curRoom->GetCreatures();
+			int totalCreatures = curRoom->GetTotalCreatures();
+			int state = curRoom->GetState();
 
+			curRoom->Dirty();
+
+			for (int i = 0; i < totalCreatures; i++)
+			{
+				Creature* creature = creatures[creaturesIndex[i]];
+				int type = creature->GetType();
+
+				switch (type)
+				{
+				case 1:
+					//cast to Animal;
+					if (command == "dirty")
+						static_cast<Animal*>(creature)->React(*respect, state, DIRTY); //player dirty reaction
+					else
+						static_cast<Animal*>(creature)->StrongReact(*respect, state, DIRTY); //creature dirty reaction
+					break;
+				case 2:
+					//cast to Npc;
+					if (command == "dirty")
+						static_cast<Npc*>(creature)->React(*respect, state, DIRTY); //player dirty reaction
+					else
+						static_cast<Npc*>(creature)->StrongReact(*respect, state, DIRTY); //creature dirty reaction
+					break;
+				}
 			}
 		}
 
@@ -215,7 +234,7 @@ int Game::Play()
 			Room* curRoom = rooms[curRoomIndex];
 			int* neighbors = curRoom->GetNeighbors();
 
-			printf("Room %d , ", curRoomIndex);
+			printf("Room %d, ", curRoomIndex);
 			
 			string roomState = "";
 			switch (rooms[curRoomIndex]->GetState())
@@ -239,22 +258,22 @@ int Game::Play()
 					switch (i)
 					{
 					case 0:
-						printf(" %d %s,", neighbors[i], "to the north");
+						printf(" %d %s", neighbors[i], "to the north");
 						break;
 					case 1:
-						printf(" %d %s,", neighbors[i], "to the south");
+						printf(" %d %s", neighbors[i], "to the south");
 						break;
 					case 2:
-						printf(" %d %s,", neighbors[i], "to the east");
+						printf(" %d %s", neighbors[i], "to the east");
 						break;
 					case 3:
-						printf(" %d %s,", neighbors[i], "to the west");
+						printf(" %d %s", neighbors[i], "to the west");
 						break;
 					}
 				}
 			}
 
-			printf("%s\n", " contains:");
+			printf(", %s\n", "contains:");
 
 			int totalCreaturesInRoom = curRoom->GetTotalCreatures();
 
@@ -272,10 +291,10 @@ int Game::Play()
 						printf("%s\n", "PC");
 						break;
 					case 1: // Animal
-						printf("%s %d\n", "Animal", creaturesInRoom[i]);
+						printf("%s %d\n", "animal", creaturesInRoom[i]);
 						break;
 					case 2: // NPC
-						printf("%s %d\n", "NPC", creaturesInRoom[i]);
+						printf("%s %d\n", "human", creaturesInRoom[i]);
 						break;
 					}
 				}
@@ -292,14 +311,22 @@ int Game::Play()
 			printf("%s\n", "Goodbye!");
 		}
 
-		else 
+		else if (*player->GetRespect() >= 80)
 		{
-			printf("%s\n", "Please enter a valid command. Use help for a list of valid commands.");
+			printf("%s\n\n", "You Win!");
+			exit;
 		}
 
-		//player->GetRespect() >= 80 //You Win!
-		//player->GetRespect() <= 0  //You Lose!
+		else if (*player->GetRespect() <= 0)
+		{
+			printf("%s\n\n", "You Lose!");
+			exit;
+		}
 
+		else 
+		{
+			printf("%s\n", "Please enter a valid command. Use \"help\" for a list of valid commands.");
+		}
 
 	} while (command != "exit"); //exit game loop.
  
