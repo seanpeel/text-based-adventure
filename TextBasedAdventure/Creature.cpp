@@ -30,3 +30,26 @@ void Creature::SetRoom(int room)
 {
 	this->room = room;
 }
+
+int Creature::Move(int creature, int src, int dest, Room** rooms)
+{
+	if (dest != -1)
+	{
+		//Remove from source room;
+		Room* srcRoom = rooms[src];
+		srcRoom->RemoveCreature(creature);
+
+		//Add to destination room;
+		Room* destRoom = rooms[dest];
+		destRoom->AddCreature(creature);
+
+		//Update creature room information;
+		SetRoom(dest);
+
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
+}

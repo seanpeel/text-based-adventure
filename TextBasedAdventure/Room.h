@@ -15,10 +15,11 @@ public:
 
 	int* GetNeighbors();
 	int* GetCreatures();
-	int GetTotalCreatures();
-
+	int& GetTotalCreatures();
 	void AddCreature(int creature);
-	void RemoveCreature(int creature);
-	
+	int RemoveCreature(int creature);
+
+	void Clean();
+	void Dirty();
 };
 

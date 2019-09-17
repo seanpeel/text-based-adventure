@@ -5,12 +5,12 @@ Animal::Animal()
 
 }
 
-void Animal::growl(int& respect)
+void Animal::growl(int& respect, int state)
 {
 	respect--;
 }
 
-void Animal::lickFace(int& respect)
+void Animal::lickFace(int& respect, int state)
 {
 	respect++;
 }

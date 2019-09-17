@@ -1,3 +1,5 @@
+#include "Room.h"
+
 #pragma once
 class Creature
 {
@@ -10,7 +12,10 @@ public:
 
 	int GetType();
 	void SetType(int type);
+
 	int GetRoom();
 	void SetRoom(int room);
+
+	int Move(int creature, int src, int dest, Room** rooms);
 };
 

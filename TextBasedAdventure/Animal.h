@@ -4,9 +4,10 @@
 class Animal : public Creature
 {
 private:
+	void growl(int& respect, int state);
+	void lickFace(int& respect, int state);
 public:
 	Animal();
-	void growl(int& respect);
-	void lickFace(int& respect);
+	void React(int& respect, int state, int action);
 };
 

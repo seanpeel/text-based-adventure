@@ -1,4 +1,5 @@
 #include "Room.h"
+#include <stdio.h>
 
 Room::Room()
 {
@@ -30,7 +31,7 @@ int* Room::GetNeighbors()
 	return neighbors;
 }
 
-int Room::GetTotalCreatures()
+int& Room::GetTotalCreatures()
 {
 	return totalCreatures;
 }
@@ -40,12 +41,12 @@ int* Room::GetCreatures()
 	return creatures;
 }
 
-void Room::AddCreature(int creature) 
+void Room::AddCreature(int creature)
 {
-	creatures[totalCreatures++] = creature;
+	this->creatures[totalCreatures++] = creature;
 }
 
-void Room::RemoveCreature(int creature)
+int Room::RemoveCreature(int creature)
 {
 	for (int i = 0; i < totalCreatures; i++)
 	{
@@ -56,7 +57,34 @@ void Room::RemoveCreature(int creature)
 				creatures[j] = creatures[j + 1];
 			}
 			creatures[totalCreatures] = -1;
-			break;
+			totalCreatures--;
+			return 0;
 		}
+	}
+	
+	return -1;
+}
+
+void Room::Clean()
+{
+	if (state != 0)
+	{
+		state--;
+	}
+	else
+	{
+		printf("%s\n", "This room is already clean.");
+	}
+}
+
+void Room::Dirty()
+{
+	if (state != 2) 
+	{
+		state++;
+	}
+	else
+	{
+		printf("%s\n", "This room is already dirty.");
 	}
 }

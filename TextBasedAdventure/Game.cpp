@@ -51,6 +51,7 @@ void Game::SetUp()
 			player->SetRoom(location);
 
 			creatures[i] = player;
+			playerIndex = i;
 			break;
 		case 1: // Animal
 			{
@@ -93,9 +94,9 @@ int Game::Play()
 			printf("%s%d\n", "Player Attempting to Move North. Current Room: ", curRoomIndex);
 			Room* curRoom = rooms[curRoomIndex];
 			int nextRoomIndex = curRoom->GetNeighbors()[NORTH];
-			if(nextRoomIndex != -1) 
+			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
+			if (success == 0)
 			{
-				player->SetRoom(nextRoomIndex);
 				printf("%s%d\n", "Player Moved North. Current Room: ", nextRoomIndex);
 			}
 			else
@@ -111,9 +112,9 @@ int Game::Play()
 			printf("%s%d\n", "Player Attempting to Move West. Current Room: ", curRoomIndex);
 			Room* curRoom = rooms[curRoomIndex];
 			int nextRoomIndex = curRoom->GetNeighbors()[WEST];
-			if (nextRoomIndex != -1)
+			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
+			if (success == 0)
 			{
-				player->SetRoom(nextRoomIndex);
 				printf("%s%d\n", "Player Moved West. Current Room: ", nextRoomIndex);
 			}
 			else
@@ -128,9 +129,9 @@ int Game::Play()
 			printf("%s%d\n", "Player Attempting to Move South. Current Room: ", curRoomIndex);
 			Room* curRoom = rooms[curRoomIndex];
 			int nextRoomIndex = curRoom->GetNeighbors()[SOUTH];
-			if (nextRoomIndex != -1)
+			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
+			if (success == 0)
 			{
-				player->SetRoom(nextRoomIndex);
 				printf("%s%d\n", "Player Moved South. Current Room: ", nextRoomIndex);
 			}
 			else
@@ -145,9 +146,9 @@ int Game::Play()
 			printf("%s%d\n", "Player Attempting to Move East. Current Room: ", curRoomIndex);
 			Room* curRoom = rooms[curRoomIndex];
 			int nextRoomIndex = curRoom->GetNeighbors()[EAST];
-			if (nextRoomIndex != -1)
+			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
+			if (success == 0)
 			{
-				player->SetRoom(nextRoomIndex);
 				printf("%s%d\n", "Player Moved East. Current Room: ", nextRoomIndex);
 			}
 			else
@@ -162,7 +163,31 @@ int Game::Play()
 			{
 				printf("%s\n", "Player Clean.");
 				int* respect = player->GetRespect();
-				static_cast<Animal*>(creatures[0])->lickFace(*respect);
+				int curRoomIndex = player->GetRoom();
+
+				Room* curRoom = rooms[curRoomIndex];
+				int* creaturesIndex = curRoom->GetCreatures();
+				int totalCreatures = curRoom->GetTotalCreatures();
+				curRoom->Clean();
+
+				for (int i = 0; i < totalCreatures; i++)
+				{
+					Creature* creature = creatures[creaturesIndex[i]];
+					int type = creature->GetType();
+					
+					switch (type)
+					{
+					case 1:	
+						//cast to Animal;
+						//static_cast<Animal*>(creature)->React(*respect, curRoom->GetState(), CLEAN);
+						break;
+					case 2:
+						//cast to Npc;
+						static_cast<Npc*>(creature)->React(*respect, curRoom->GetState(), CLEAN);
+						break;
+					}
+				}
+
 				printf("%d\n", *respect);
 			}
 			else
@@ -176,9 +201,6 @@ int Game::Play()
 			if (command == "dirty")
 			{
 				printf("%s\n", "Player Dirty.");
-				int* respect = player->GetRespect();
-				static_cast<Animal*>(creatures[0])->growl(*respect);
-				printf("%d\n", *respect);
 			}
 			else
 			{
@@ -199,13 +221,13 @@ int Game::Play()
 			switch (rooms[curRoomIndex]->GetState())
 			{
 			case 0:
-				roomState = "dirty";
+				roomState = "clean";
 				break;
 			case 1:
 				roomState = "half-dirty";
 				break;
 			case 2:
-				roomState = "clean";
+				roomState = "dirty";
 				break;
 			}
 			cout << roomState << ", Neighbors";
