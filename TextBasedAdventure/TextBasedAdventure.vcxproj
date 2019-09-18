@@ -127,7 +127,7 @@
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="NPC.cpp" />
+    <ClCompile Include="Npc.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="Util.cpp" />
@@ -136,7 +136,7 @@
     <ClInclude Include="Animal.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="NPC.h" />
+    <ClInclude Include="Npc.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Util.h" />
