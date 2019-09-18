@@ -96,11 +96,12 @@ int Game::Play()
 			int nextRoomIndex = curRoom->GetNeighbors()[NORTH];
 			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
 
-			if (success == 0)
+			
+			if (nextRoomIndex > -1 && success == 0)
 			{
 				printf("%s\n\n", "You leave towards the north.");
 			}
-			else
+			else if(nextRoomIndex == -1)
 			{
 				printf("%s\n\n", "No room exists to the north.");
 			}
@@ -114,11 +115,11 @@ int Game::Play()
 			int nextRoomIndex = curRoom->GetNeighbors()[WEST];
 			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
 
-			if (success == 0)
+			if (nextRoomIndex > -1 && success == 0)
 			{
 				printf("%s\n\n", "You leave towards the west.");
 			}
-			else
+			else if (nextRoomIndex == -1)
 			{
 				printf("%s\n\n", "No room exists to the west.");
 			}
@@ -130,11 +131,12 @@ int Game::Play()
 			Room* curRoom = rooms[curRoomIndex];
 			int nextRoomIndex = curRoom->GetNeighbors()[SOUTH];
 			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
-			if (success == 0)
+
+			if (nextRoomIndex > -1 && success == 0)
 			{
 				printf("%s\n\n", "You leave towards the south.");
 			}
-			else
+			else if (nextRoomIndex == -1)
 			{
 				printf("%s\n\n", "No room exists to the south.");
 			}
@@ -146,11 +148,12 @@ int Game::Play()
 			Room* curRoom = rooms[curRoomIndex];
 			int nextRoomIndex = curRoom->GetNeighbors()[EAST];
 			int success = player->Move(playerIndex, curRoomIndex, nextRoomIndex, rooms);
-			if (success == 0)
+
+			if (nextRoomIndex > -1 && success == 0)
 			{
 				printf("%s\n\n", "You leave towards the east.");
 			}
-			else
+			else if (nextRoomIndex == -1)
 			{
 				printf("%s\n\n", "No room exists to the east.");
 			}
@@ -176,17 +179,71 @@ int Game::Play()
 				{
 				case 1:
 					//cast to Animal;
-					if(command == "clean")
-						static_cast<Animal*>(creature)->React(*respect, state, CLEAN); //player clean reaction
+					if (command == "clean")
+						static_cast<Animal*>(creature)->React(*respect, state, CLEAN);
 					else
-						static_cast<Animal*>(creature)->StrongReact(*respect, state, CLEAN); //creature clean reaction
+					{
+						int creatureCommand = (int)command[0] - '0';
+						if (creature->GetName() == creatureCommand)
+						{
+							static_cast<Animal*>(creatures[creatureCommand])->StrongReact(*respect, state, CLEAN);
+						}
+						else
+						{
+							static_cast<Animal*>(creature)->React(*respect, state, CLEAN);
+						}
+					}
 					break;
 				case 2:
 					//cast to Npc;
 					if (command == "clean")
 						static_cast<Npc*>(creature)->React(*respect, state, CLEAN); //player clean reaction
 					else
-						static_cast<Npc*>(creature)->StrongReact(*respect, state, CLEAN); //creature clean reaction
+					{
+						int creatureCommand = (int)command[0] - '0';
+						if (creature->GetName() == creatureCommand)
+						{
+							static_cast<Npc*>(creatures[creatureCommand])->StrongReact(*respect, state, CLEAN);
+						}
+						else
+						{
+							static_cast<Npc*>(creature)->React(*respect, state, CLEAN);
+						}
+					}
+
+					if (curRoom->GetState() == 0)
+					{
+						int* neighbors = curRoom->GetNeighbors();
+
+						int randNeighbor;
+						int randIndex;
+						do
+						{
+							randIndex = rand() % 4;
+							randNeighbor = neighbors[randIndex];
+						} while (randNeighbor == -1);
+
+						creature->Move(creaturesIndex[i], curRoomIndex, randNeighbor, rooms);
+						i--; //Need to decrement index since array has shifted.
+						totalCreatures = curRoom->GetTotalCreatures(); //Need to reobtain total creatures since a creature has left.
+
+						printf("%d %s", creature->GetName(), "leaves to the ");
+						switch (randIndex)
+						{
+						case 0:
+							printf("%s\n\n", "north.");
+							break;
+						case 1:
+							printf("%s\n\n", "south.");
+							break;
+						case 2:
+							printf("%s\n\n", "east.");
+							break;
+						case 3:
+							printf("%s\n\n", "west.");
+							break;
+						}
+					}
 					break;
 				}
 			}
@@ -210,19 +267,76 @@ int Game::Play()
 
 				switch (type)
 				{
+				case 0:
+					printf("%s\n\n", "PLAYER");
+					break;
 				case 1:
 					//cast to Animal;
 					if (command == "dirty")
-						static_cast<Animal*>(creature)->React(*respect, state, DIRTY); //player dirty reaction
+						static_cast<Animal*>(creature)->React(*respect, state, DIRTY);
 					else
-						static_cast<Animal*>(creature)->StrongReact(*respect, state, DIRTY); //creature dirty reaction
+					{
+						int creatureCommand = (int)command[0] - '0';
+						if (creature->GetName() == creatureCommand)
+						{
+							static_cast<Animal*>(creatures[creatureCommand])->StrongReact(*respect, state, DIRTY);
+						}
+						else
+						{
+							static_cast<Animal*>(creature)->React(*respect, state, DIRTY);
+						}
+					}
+						
+					if (curRoom->GetState() == 2)
+					{
+						int* neighbors = curRoom->GetNeighbors();
+
+						int randNeighbor;
+						int randIndex;
+						do
+						{
+							randIndex = rand() % 4;
+							randNeighbor = neighbors[randIndex];
+						} while (randNeighbor == -1);
+
+						creature->Move(creaturesIndex[i], curRoomIndex, randNeighbor, rooms);
+						i--; //Need to decrement index since array has shifted.
+						totalCreatures = curRoom->GetTotalCreatures(); //Need to reobtain total creatures since a creature has left.
+						
+						printf("%d %s", creature->GetName(), "leaves to the ");
+						switch (randIndex)
+						{
+						case 0:
+							printf("%s\n\n", "north.");
+							break;
+						case 1:
+							printf("%s\n\n", "south.");
+							break;
+						case 2:
+							printf("%s\n\n", "east.");
+							break;
+						case 3:
+							printf("%s\n\n", "west.");
+							break;
+						}
+					}
 					break;
 				case 2:
 					//cast to Npc;
 					if (command == "dirty")
-						static_cast<Npc*>(creature)->React(*respect, state, DIRTY); //player dirty reaction
+						static_cast<Npc*>(creature)->React(*respect, state, DIRTY);
 					else
-						static_cast<Npc*>(creature)->StrongReact(*respect, state, DIRTY); //creature dirty reaction
+					{
+						int creatureCommand = (int)command[0] - '0';
+						if (creature->GetName() == creatureCommand)
+						{
+							static_cast<Npc*>(creatures[creatureCommand])->StrongReact(*respect, state, DIRTY);
+						}
+						else
+						{
+							static_cast<Npc*>(creature)->React(*respect, state, DIRTY);
+						}
+					}
 					break;
 				}
 			}
@@ -311,21 +425,21 @@ int Game::Play()
 			printf("%s\n", "Goodbye!");
 		}
 
-		else if (*player->GetRespect() >= 80)
+		else 
+		{
+			printf("%s\n", "Please enter a valid command. Use \"help\" for a list of valid commands.");
+		}
+
+		if (*player->GetRespect() >= 80)
 		{
 			printf("%s\n\n", "You Win!");
 			exit;
 		}
 
-		else if (*player->GetRespect() <= 0)
+		if (*player->GetRespect() <= 0)
 		{
 			printf("%s\n\n", "You Lose!");
 			exit;
-		}
-
-		else 
-		{
-			printf("%s\n", "Please enter a valid command. Use \"help\" for a list of valid commands.");
 		}
 
 	} while (command != "exit"); //exit game loop.

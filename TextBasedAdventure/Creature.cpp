@@ -1,4 +1,5 @@
 #include "Creature.h"
+#include <stdio.h>
 
 Creature::Creature()
 {
@@ -45,18 +46,28 @@ int Creature::Move(int creature, int src, int dest, Room** rooms)
 {
 	if (dest != -1)
 	{
-		//Remove from source room;
 		Room* srcRoom = rooms[src];
-		srcRoom->RemoveCreature(creature);
-
-		//Add to destination room;
 		Room* destRoom = rooms[dest];
-		destRoom->AddCreature(creature);
 
-		//Update creature room information;
-		SetRoom(dest);
+		int totalCreatures = destRoom->GetTotalCreatures();
+		
+		if (totalCreatures < 9)
+		{
+			//Remove from source room;
+			srcRoom->RemoveCreature(creature);
 
-		return 0;
+			//Add to destination room;
+			destRoom->AddCreature(creature);
+
+			//Update creature room information;
+			SetRoom(dest);
+
+			return 0;
+		} 
+		else
+		{
+			printf("%s %d %s","Room", dest, "is full.");
+		}
 	}
 	else
 	{
