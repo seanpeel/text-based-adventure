@@ -267,8 +267,7 @@ int Game::Play()
 
 				switch (type)
 				{
-				case 0:
-					printf("%s\n\n", "PLAYER");
+				case 0: //Player -- do nothing
 					break;
 				case 1:
 					//cast to Animal;
@@ -433,13 +432,13 @@ int Game::Play()
 		if (*player->GetRespect() >= 80)
 		{
 			printf("%s\n\n", "You Win!");
-			exit;
+			return 0;
 		}
 
 		if (*player->GetRespect() <= 0)
 		{
 			printf("%s\n\n", "You Lose!");
-			exit;
+			return 0;
 		}
 
 	} while (command != "exit"); //exit game loop.
