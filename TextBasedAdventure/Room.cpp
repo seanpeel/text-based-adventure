@@ -54,9 +54,14 @@ int Room::RemoveCreature(int creature)
 		{
 			for (int j = i; j < totalCreatures; j++)
 			{
-				creatures[j] = creatures[j + 1];
+				
+				if (j + 1 < 10)
+				{
+					creatures[j] = creatures[j + 1];
+				}
+				
 			}
-			creatures[totalCreatures] = -1;
+			creatures[totalCreatures - 1] = -1;
 			totalCreatures--;
 			return 0;
 		}

@@ -51,7 +51,7 @@ int Creature::Move(int creature, int src, int dest, Room** rooms)
 
 		int totalCreatures = destRoom->GetTotalCreatures();
 		
-		if (totalCreatures < 9)
+		if (totalCreatures < 10)
 		{
 			//Remove from source room;
 			srcRoom->RemoveCreature(creature);

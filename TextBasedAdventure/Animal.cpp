@@ -36,15 +36,11 @@ void Animal::React(int& respect, int state, int action)
 	{
 		if (state != 0)
 			LickFace(respect, state);
-		else
-			printf("%s\n", "This room is already clean.");
 	}
 	else //dirty
 	{
 		if (state != 2)
 			Growl(respect, state);
-		else
-			printf("%s\n", "This room is already dirty.");
 	}
 
 	printf(" %s %d.\n", "Respect is now ", respect);
@@ -56,15 +52,11 @@ void Animal::StrongReact(int& respect, int state, int action)
 	{
 		if (state != 0)
 			StrongLickFace(respect, state);
-		else
-			printf("%s\n", "This room is already clean.");
 	}
 	else //dirty
 	{
 		if (state != 2)
 			StrongGrowl(respect, state);
-		else
-			printf("%s\n", "This room is already dirty.");
 	}
 
 	printf(" %s %d.\n", "Respect is now ", respect);
